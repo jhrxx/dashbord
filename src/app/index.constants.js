@@ -6,6 +6,8 @@
     .module('dashbord')
     .constant('malarkey', malarkey)
     .constant('toastr', toastr)
+    .constant('ionicons')
+    .constant('loading')
     .constant('moment', moment);
 
 })();
