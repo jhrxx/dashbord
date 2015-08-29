@@ -12,6 +12,11 @@
         controller: 'MainController',
         controllerAs: 'main'
       })
+      .when('/trends', {
+        templateUrl: 'app/trends/trends.html',
+        controller: 'TrendsController',
+        controllerAs: 'trends'
+      })
       .otherwise({
         redirectTo: '/'
       });

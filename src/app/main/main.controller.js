@@ -51,7 +51,6 @@
       $scope.yesterday = {};
 
       var renderSummaryTable = function(data) {
-
           var sum = {};
           sum.today = {
               new_user:[],active_user:[],launch:[],total:[]

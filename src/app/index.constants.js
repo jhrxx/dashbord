@@ -8,6 +8,7 @@
     .constant('toastr', toastr)
     .constant('ionicons')
     .constant('loading')
+    .constant('highcharts-release')
     .constant('moment', moment);
 
 })();
