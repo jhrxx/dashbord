@@ -9,6 +9,7 @@
     .constant('ionicons')
     .constant('loading')
     .constant('highcharts-release')
+    .constant('720kb.datepicker')
     .constant('moment', moment);
 
 })();

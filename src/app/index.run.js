@@ -7,7 +7,7 @@
 
   /** @ngInject */
   function runBlock($log) {
-
+  	// initialization Fn
     $log.debug('runBlock end');
   }
 

@@ -17,6 +17,36 @@
         controller: 'TrendsController',
         controllerAs: 'trends'
       })
+      .when('/user/new', {
+        templateUrl: 'app/user/new.html',
+        controller: 'UserController',
+        controllerAs: 'user'
+      })
+      .when('/user/active', {
+        templateUrl: 'app/user/active.html',
+        controller: 'UserController',
+        controllerAs: 'user'
+      })
+      .when('/user/duration', {
+        templateUrl: 'app/user/duration.html',
+        controller: 'UserController',
+        controllerAs: 'user'
+      })
+      .when('/user/silent', {
+        templateUrl: 'app/user/silent.html',
+        controller: 'UserController',
+        controllerAs: 'user'
+      })
+      .when('/user/start', {
+        templateUrl: 'app/user/start.html',
+        controller: 'UserController',
+        controllerAs: 'user'
+      })
+      .when('/user/retained', {
+        templateUrl: 'app/user/retained.html',
+        controller: 'UserController',
+        controllerAs: 'user'
+      })
       .otherwise({
         redirectTo: '/'
       });

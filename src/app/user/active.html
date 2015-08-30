@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-xs-12">
             <h3 class="page-title">
-            应用趋势 <small>最近一周数据 <span ng-if="0">{{startdate}} ~ {{enddate}}</span></small>
+            活跃用户 <small>最近一周数据 <span ng-if="0">{{startdate}} ~ {{enddate}}</span></small>
             <div class="pull-right">
                 <div class="form-inline">
                     <div class="form-group">
@@ -23,23 +23,19 @@
     </div>
     <div class="row">
         <div class="col-xs-12">
-        <div class="portlet">
-        <div class="protlet-title">
-            <div class="btn-group hide" data-toggle="buttons" id="app_chart_btns">
-                <label class="btn default" id="new_user_label">
-                <input type="checkbox" class="toggle" data-name="sum_new_user">新增用户</label>
-                <label class="btn default" id="active_user_label">
-                <input type="checkbox" class="toggle" data-name="sum_active_user">活跃用户</label>
-                <label class="btn default" id="launch_label">
-                <input type="checkbox" class="toggle" data-name="sum_launch">启动次数</label>
-                <label class="btn default" id="avg_duration_label">
-                <input type="checkbox" class="toggle" data-name="avg_duration">平均持续时间</label>
-                <label class="btn default" id="total_label">
-                <input type="checkbox" class="toggle" data-name="sum_total">累计用户</label>
+            <div class="portlet">
+                <div class="protlet-title">
+                    <div class="btn-group " data-toggle="buttons">
+                        <label class="btn default">
+                        <input type="radio" class="toggle" data-name="">日</label>
+                        <label class="btn default">
+                        <input type="radio" class="toggle" data-name="">周</label>
+                        <label class="btn default">
+                        <input type="radio" class="toggle" data-name="">月</label>
+                    </div>
+                </div>
             </div>
-        </div>
             <div id="container" style="min-width:400px;height:500px"></div>
-            </div>
         </div>
     </div>
     <div class="row">

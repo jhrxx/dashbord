@@ -15,7 +15,7 @@
     <link href="assets/css/style.css" rel="stylesheet" type="text/css"/>
     <link href="assets/css/style-responsive.css" rel="stylesheet" type="text/css"/>
     <link href="assets/css/themes/default.css" rel="stylesheet" type="text/css" />
-    <!-- <link href="assets/css/custom.css" rel="stylesheet" type="text/css" /> -->
+    <link href="assets/css/custom.css" rel="stylesheet" type="text/css" />
     <!-- endbuild -->
 
     <!-- build:css({.tmp/serve,src}) styles/app.css -->
@@ -31,12 +31,12 @@
     <header>
 
     </header>
-    <div class="page-container">
-        <div class="page-sidebar-wrapper"></div>
-        <div class="page-content-wrapper">
-            <div ng-view></div>
-        </div>
-    </div>
+    <article class="page-container">
+        <!-- <nav class="page-sidebar-wrapper" ng-include="'app/sidebar/sidebar.html'"></nav> -->
+        <aside-bar class="page-sidebar-wrapper"></aside-bar> 
+        <section class="page-content-wrapper" ng-view>
+        </section>
+    </article>
 
 
     <!-- build:js(src) scripts/vendor.js -->
