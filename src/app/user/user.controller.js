@@ -3,63 +3,297 @@
 
   angular
     .module('dashbord')
+    .service('userConfig', userConfig)
     .controller('UserController', UserController);
 
+  function userConfig($log) {
+    var chartCfg = {
+        title: {
+          align: 'left'
+        },
+        exporting: {
+          enabled: false
+        },
+        xAxis: {
+          tickWidth: 0,
+          gridLineWidth: 1,
+          labels: {
+            align: 'center',
+            x: 3,
+            y: -3
+          }
+        },
+        credits: {
+          enabled: false
+        },
+        // yAxis: [{ // left y axis
+        //   title: {
+        //     text: null
+        //   },
+        //   labels: {
+        //     align: 'left',
+        //     x: 3,
+        //     y: 16,
+        //     format: '{value:.,0f}'
+        //   },
+        //   showFirstLabel: false
+        // }, { // right y axis
+        //   linkedTo: 0,
+        //   gridLineWidth: 0,
+        //   opposite: true,
+        //   title: {
+        //     text: null
+        //   },
+        //   labels: {
+        //     align: 'right',
+        //     x: -3,
+        //     y: 16,
+        //     format: '{value:.,0f}'
+        //   },
+        //   showFirstLabel: false
+        // }],
+        legend: {
+          enabled: true,
+          align: 'right',
+          verticalAlign: 'top',
+          y: 0,
+          floating: true,
+          borderWidth: 0
+        },
+        tooltip: {
+          shared: false,
+          crosshairs: false
+        },
+        plotOptions: {
+          series: {
+            cursor: 'pointer',
+            marker: {
+              pointPadding: 0.2,
+              borderWidth: 0,
+              lineWidth: 1
+            }
+          }
+        }
+      };
+    var data = {
+      'new': {
+        url: 'http://115.29.202.161:8087/statistics/api/new',
+        chartCfg: angular.extend(chartCfg, {
+          // chart: {
+          //   type: 'column'
+          // },
+          title: {
+            text: '新增用户趋势',
+            legend: {
+              floating: false
+            }
+          },
+          tooltip: {
+            pointFormat: '{series.name}: {point.y:.1f}',
+            shared: true
+          }
+        }),
+        dataGenerator: function(data) {
+
+        },
+        render: function() {
+
+        }
+      },
+      'active': {
+        url: 'http://115.29.202.161:8087/statistics/api/active'
+      },
+      'silent': {
+        url: 'http://115.29.202.161:8087/statistics/api/silent'
+      },
+      'launch': {
+        url: 'http://115.29.202.161:8087/statistics/api/launch',
+        chartCfg: angular.extend(chartCfg, {
+          // chart: {
+          //   type: 'column'
+          // },
+          title: {
+            text: '启动次数趋势',
+            legend: {
+              floating: false
+            }
+          },
+          tooltip: {
+            pointFormat: '{series.name}: {point.y:.1f}',
+            shared: true
+          }
+        }),
+        dataGenerator: function(data) {
+
+        },
+        render: function() {
+
+        }
+      },
+      'retained': {
+        url: 'http://115.29.202.161:8087/statistics/api/retained'
+      },
+      'duration': {
+        url: 'http://115.29.202.161:8087/statistics/api/duration',
+        chartCfg: angular.extend(chartCfg, {
+          chart: {
+            type: 'column'
+          },
+          title: {
+            legend: {
+              floating: false
+            }
+          },
+          tooltip: {
+            pointFormat: '{series.name}: {point.y:.1f} %',
+            shared: true
+          }
+        }),
+        dataGenerator: function(data) {
+          var obj = {single: {key: [], value: [], data:[]}, day: {key: [], value: [], data:[]}};
+          // obj.single_duration = data.single_duration;
+          // obj.day_duration = data.day_duration;
+          angular.forEach(data.single_duration, function(value, key) {
+            obj.single.key.push(key);
+            obj.single.value.push(value);
+            obj.single.data.push({key: key, value: value});
+          });
+
+          angular.forEach(data.day_duration, function(value, key) {
+            obj.day.key.push(key);
+            obj.day.value.push(value);
+            obj.day.data.push({key: key, value: value});
+          });
+
+          return obj;
+        },
+        render: function(data) {
+          // $log.log(this.chartCfg);
+          var _cfg = this.chartCfg,
+              _singleCfg = angular.extend(_cfg, {
+                title: {
+                  text: '单次使用时长分布'
+                },
+                xAxis: {
+                  categories: data.single.key
+                },
+                series: [{
+                  name: '时长占比',
+                  data: data.single.value
+                }]
+              });
+
+          $('#single_duration_container').highcharts(_singleCfg);
+
+          var _dayCfg = angular.extend(_cfg, {
+            title: {
+              text: '日使用时长分布'
+            },
+            xAxis: {
+              categories: data.day.key
+            },
+            series: [{
+              name: '时长占比',
+              data: data.day.value
+            }]
+          });
+
+          $('#day_duration_container').highcharts(_dayCfg);
+        }
+      }
+    };
+
+    this.getConfig = getConfig;
+
+    function getConfig() {
+      return data;
+    }
+  };
+
   /** @ngInject */
-  function UserController($scope, $http, $location,$log) {
+  function UserController($rootScope, $scope, $http, $location, $log, userConfig) {
     // $log.log($location.path());
-    $scope.path = $location.path().split('/')[2];
-    switch ($scope.path) {
+    var path = $location.path().split('/')[2],
+        config = userConfig.getConfig(),
+        options = {};
+
+    function getDateStr(AddDayCount,split) {
+      if(!split) {
+        split = '/';
+      }
+      var dd = new Date();
+      dd.setDate(dd.getDate()+AddDayCount);//获取AddDayCount天后的日期
+      var y = dd.getFullYear();
+      var m = dd.getMonth()+1;//获取当前月份的日期
+      var d = dd.getDate();
+      return y+split+m+split+d;
+    };
+    $scope.filter = {
+      time:'day'
+    };
+    $scope.today = getDateStr(0);
+    $scope.yesterday = getDateStr(-1);
+    $scope.minDate = '2014/1/1';
+
+
+
+    switch (path) {
       case 'new': break;
       case 'active': break;
       case 'silent': break;
-      case 'start': break;
+      case 'launch':
+        break;
       case 'retained': break;
-      case 'duration': break;
-      
+      case 'duration':
+        options.start_date = getDateStr(-1,'-');
+        $scope.startdate = options.start_date;
+        break;
+    };
+
+    var retainedBgc = function(data) {
+      return 'retained-c'+Math.ceil(data/20);
     }
 
+    var fetchData = function(options) {
+      options = angular.extend({
+        app_id: $rootScope.currentApp.id,
+        start_date: $scope.startdate,
+        end_date: $scope.enddate
+      }, options);
 
-    function getDateStr(AddDayCount) { 
-      var dd = new Date(); 
-      dd.setDate(dd.getDate()+AddDayCount);//获取AddDayCount天后的日期 
-      var y = dd.getFullYear(); 
-      var m = dd.getMonth()+1;//获取当前月份的日期 
-      var d = dd.getDate(); 
-      return y+"-"+m+"-"+d; 
-    } 
-    // 使用时长
-    //var mockdata =  {"errno":0,"errmsg":"","data":{"id":973,"create_time":1440854423,"update_time":1440854423,"app_id":5,"date":"2015-08-28","single_duration":{"1-3\u79d2":1.9,"4-10\u79d2":2,"11-30\u79d2":1.6,"31-60\u79d2":1.3,"1-3\u5206":28.6,"3-10\u5206":63.7,"10-20\u5206":0.9},"day_duration":{"1-3\u79d2":1.1,"4-10\u79d2":1.5,"11-30\u79d2":0.4,"31-60\u79d2":1.1,"1-3\u5206":42.8,"3-10\u5206":52.6,"10-20\u5206":0.5}}}
+      $http.get(config[path].url, options).
+        then(function(response) {
+          // this callback will be called asynchronously
+          // when the response is available
 
-    $scope.today = getDateStr(0);
-    $scope.yesterday = getDateStr(-1);
-    
-      var fetchData = function() {  
+  var mockdata =  {"errno":0,"errmsg":"","data":{"id":962,"create_time":1440854423,"update_time":1440854423,"app_id":5,"date":"2015-07-20","single_duration":{"1-3\u79d2":0.7,"4-10\u79d2":1.6,"11-30\u79d2":0.2,"31-60\u79d2":0.4,"1-3\u5206":40.6,"3-10\u5206":55.6,"10-20\u5206":0.9},"day_duration":{"1-3\u79d2":0.9,"4-10\u79d2":0.9,"11-30\u79d2":0.6,"31-60\u79d2":1.9,"1-3\u5206":36.8,"3-10\u5206":58.4,"10-20\u5206":0.5}}}
+  $log.log(mockdata);
+  $scope.data = config[path].dataGenerator ?  config[path].dataGenerator(mockdata.data): response.data;
+  $log.log($scope.data);
+  config[path].render && config[path].render($scope.data);
+  return;
+          if(response.data.errno === 0) {
+            $scope.data = config[path].dataGenerator ? config[path].dataGenerator(response.data) : response.data;
+            config[path].render && config[path].render($scope.data);
+          } else {
+            alert(response.data.errmsg);
+          }
+        }, function(response) {
+          // called asynchronously if an error occurs
+          // or server returns response with an error status.
 
-        $http.get('http://115.29.202.161:8087/statistics/api/index').
-          then(function(response) {
-            // this callback will be called asynchronously
-            // when the response is available
-            // console.log(response.data)
-    
-    var mockdata = {"errno":0,"errmsg":"","data":[{"id":1,"create_time":1440580984,"update_time":1440662570,"name":"YeahMobi-DY-USA-Package","app_key":"541f7767fd98c518cc0776b7","platform":"android","type":"","popular":0,"sum_data":{"yesterday":{"id":951,"create_time":1440585909,"update_time":1440680390,"app_id":1,"date":"2015-08-24","new_user":4020,"active_user":8383,"launch":25424,"duration":1292,"duration_text":"00:21:32","total":0},"today":{"id":952,"create_time":1440585909,"update_time":1440680390,"app_id":1,"date":"2015-08-25","new_user":3945,"active_user":10909,"launch":41677,"duration":1092,"duration_text":"00:18:12","total":0}}},{"id":2,"create_time":1440580984,"update_time":1440662570,"name":"YeahMobi-DY-USA-Preload","app_key":"541f7724fd98c518de06f185","platform":"android","type":"","popular":0,"sum_data":{"yesterday":{"id":1903,"create_time":1440585916,"update_time":1440680399,"app_id":2,"date":"2015-08-24","new_user":194,"active_user":241,"launch":439,"duration":567,"duration_text":"00:09:27","total":0},"today":{"id":1904,"create_time":1440585916,"update_time":1440680399,"app_id":2,"date":"2015-08-25","new_user":297,"active_user":387,"launch":844,"duration":172,"duration_text":"00:02:52","total":0}}},{"id":3,"create_time":1440580984,"update_time":1440662570,"name":"testAndroid","app_key":"53f2e57afd98c536610030d9","platform":"android","type":"","popular":0,"sum_data":{"yesterday":{"id":2855,"create_time":1440585923,"update_time":1440680409,"app_id":3,"date":"2015-08-24","new_user":0,"active_user":0,"launch":0,"duration":739,"duration_text":"00:12:19","total":0},"today":{"id":2856,"create_time":1440585923,"update_time":1440680409,"app_id":3,"date":"2015-08-25","new_user":0,"active_user":0,"launch":0,"duration":666,"duration_text":"00:11:06","total":0}}},{"id":4,"create_time":1440580984,"update_time":1440662570,"name":"iphone dailyyoga \u6d4b\u8bd5","app_key":"53e87056fd98c59651063a1e","platform":"ipad","type":"","popular":0,"sum_data":{"yesterday":{"id":3807,"create_time":1440585931,"update_time":1440680418,"app_id":4,"date":"2015-08-24","new_user":0,"active_user":1,"launch":1,"duration":2766,"duration_text":"00:46:06","total":0},"today":{"id":3808,"create_time":1440585931,"update_time":1440680418,"app_id":4,"date":"2015-08-25","new_user":1,"active_user":4,"launch":4,"duration":2474,"duration_text":"00:41:14","total":0}}},{"id":5,"create_time":1440580984,"update_time":1440662570,"name":"dailyyogaTv","app_key":"53b398bd56240b19e10300a3","platform":"android","type":"","popular":0,"sum_data":{"yesterday":{"id":4759,"create_time":1440585939,"update_time":1440680428,"app_id":5,"date":"2015-08-24","new_user":341,"active_user":1005,"launch":1256,"duration":1669,"duration_text":"00:27:49","total":0},"today":{"id":4760,"create_time":1440585939,"update_time":1440680428,"app_id":5,"date":"2015-08-25","new_user":339,"active_user":1004,"launch":1241,"duration":2874,"duration_text":"00:47:54","total":0}}},{"id":6,"create_time":1440580984,"update_time":1440662570,"name":"DailyYogaiPad","app_key":"5370857c56240b0a6d1a455b","platform":"ipad","type":"","popular":0,"sum_data":{"yesterday":{"id":5711,"create_time":1440585948,"update_time":1440680442,"app_id":6,"date":"2015-08-24","new_user":858,"active_user":3702,"launch":48828,"duration":1541,"duration_text":"00:25:41","total":0},"today":{"id":5712,"create_time":1440585948,"update_time":1440680442,"app_id":6,"date":"2015-08-25","new_user":795,"active_user":4139,"launch":40578,"duration":2592,"duration_text":"00:43:12","total":0}}},{"id":7,"create_time":1440580984,"update_time":1440662570,"name":"DailyYogaiPhone","app_key":"5370851456240b52a3001d00","platform":"iphone","type":"","popular":0,"sum_data":{"yesterday":{"id":6663,"create_time":1440585956,"update_time":1440680454,"app_id":7,"date":"2015-08-24","new_user":2495,"active_user":8650,"launch":30578,"duration":2889,"duration_text":"00:48:09","total":0},"today":{"id":6664,"create_time":1440585956,"update_time":1440680454,"app_id":7,"date":"2015-08-25","new_user":2639,"active_user":11055,"launch":38283,"duration":929,"duration_text":"00:15:29","total":0}}},{"id":8,"create_time":1440580984,"update_time":1440662570,"name":"DailyYoga","app_key":"5370574c56240b0a7f17a7b7","platform":"android","type":"","popular":0,"sum_data":{"yesterday":{"id":7615,"create_time":1440585968,"update_time":1440680464,"app_id":8,"date":"2015-08-24","new_user":9832,"active_user":261632,"launch":1575943,"duration":181,"duration_text":"00:03:01","total":0},"today":{"id":7616,"create_time":1440585968,"update_time":1440680464,"app_id":8,"date":"2015-08-25","new_user":11481,"active_user":265032,"launch":1595886,"duration":1350,"duration_text":"00:22:30","total":0}}},{"id":9,"create_time":1440580984,"update_time":1440662570,"name":"\u6bcf\u65e5\u745c\u4f3diOS\u4e2d\u6587iPad","app_key":"528c79a056240bb434183b10","platform":"ipad","type":"","popular":0,"sum_data":{"yesterday":{"id":8567,"create_time":1440585979,"update_time":1440680476,"app_id":9,"date":"2015-08-24","new_user":1483,"active_user":9266,"launch":68030,"duration":2225,"duration_text":"00:37:05","total":0},"today":{"id":8568,"create_time":1440585979,"update_time":1440680476,"app_id":9,"date":"2015-08-25","new_user":1474,"active_user":11149,"launch":63581,"duration":936,"duration_text":"00:15:36","total":0}}},{"id":10,"create_time":1440580984,"update_time":1440662570,"name":"\u6bcf\u65e5\u745c\u4f3diOS\u4e2d\u6587iPhone","app_key":"528c791856240b16f80cb7f2","platform":"iphone","type":"","popular":0,"sum_data":{"yesterday":{"id":9519,"create_time":1440585988,"update_time":1440680488,"app_id":10,"date":"2015-08-24","new_user":3661,"active_user":17381,"launch":88495,"duration":1623,"duration_text":"00:27:03","total":0},"today":{"id":9520,"create_time":1440585988,"update_time":1440680488,"app_id":10,"date":"2015-08-25","new_user":4052,"active_user":25580,"launch":119778,"duration":2435,"duration_text":"00:40:35","total":0}}},{"id":11,"create_time":1440580984,"update_time":1440662570,"name":"\u6bcf\u65e5\u745c\u4f3d","app_key":"50ef6bef52701504b40000c2","platform":"android","type":"","popular":0,"sum_data":{"yesterday":{"id":10471,"create_time":1440585999,"update_time":1440680501,"app_id":11,"date":"2015-08-24","new_user":15200,"active_user":284952,"launch":1300480,"duration":2874,"duration_text":"00:47:54","total":0},"today":{"id":10472,"create_time":1440585999,"update_time":1440680501,"app_id":11,"date":"2015-08-25","new_user":16662,"active_user":287979,"launch":1334700,"duration":776,"duration_text":"00:12:56","total":0}}}]};
-
-    $scope.appInfo=mockdata.data;
-    renderSummaryTable(mockdata.data);
-    return;
-            if(response.data.errno === 0) {
-              $scope.appInfo=response.data.data;
-              renderSummaryTable(response.data.data);
-            } else {
-              alert(response.data.errmsg);
-            }
-          }, function(response) {
-            // called asynchronously if an error occurs
-            // or server returns response with an error status.
-
-          });
-      };
-
-      // fetchData();
+        });
     };
+
+    $scope.$watch(function() {
+      return $rootScope.currentApp;
+    }, function() {
+      $scope.currentApp = $rootScope.currentApp;
+      fetchData({app_id: $scope.currentApp.id});
+    }, true);
+
+    $scope.refresh = function() {
+      fetchData();
+    };
+  };
 })();

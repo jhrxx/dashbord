@@ -6,7 +6,7 @@
     .controller('MainController', MainController);
 
   /** @ngInject */
-  function MainController($scope, $http) {
+  function MainController($scope, $cookieStore, $http, $log) {
     // var vm = this;
 
     // vm.awesomeThings = [];
@@ -83,6 +83,18 @@
         }
       };
 
+      var cookieStoreApps = function(data) {
+        var _apps = [{id:0,name:"全部"}];
+        for (var i = 0; i < data.length; i++) {
+          _apps.push({id: data[i].id, name: data[i].name});
+        };
+        $log.log(_apps);
+        $cookieStore.put('apps',JSON.stringify(_apps));
+        if(!$cookieStore.get('currentApp')) {
+          $cookieStore.put('currentApp', 0);
+        }
+      }
+
       var fetchData = function() {
 
         $http.get('http://115.29.202.161:8087/statistics/api/index').
@@ -94,10 +106,13 @@
 
     $scope.appInfo=mockdata.data;
     renderSummaryTable(mockdata.data);
+    cookieStoreApps(mockdata.data);
+    $log.log(mockdata.data)
     return;
             if(response.data.errno === 0) {
               $scope.appInfo=response.data.data;
               renderSummaryTable(response.data.data);
+              cookieStoreApps(response.data.data)
             } else {
               alert(response.data.errmsg);
             }

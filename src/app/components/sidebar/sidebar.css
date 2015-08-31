@@ -1,6 +1,10 @@
 ul.page-sidebar {
 	padding: 0;
 }
+ul.page-sidebar ul  {
+	list-style: none;
+	padding: 0;
+}
 ul.page-sidebar li  {
 	list-style: none;
 }
@@ -22,11 +26,17 @@ ul.page-sidebar li a {
 	margin-bottom:0;
 	box-shadow:0 0;
 	font-size: 16px;
+	-webkit-transition:color .4sease 0s;
+	-moz-transition:color .4sease 0s;
+	transition:color .4s ease 0s;
+	-webkit-transition:background .4s;
+	-moz-transition:background .4s;
+	transition:background .4s
 }
 ul.page-sidebar li a i {
 	position:absolute;
 	font-size: 24px;
-	top:11px;
+	top:9px;
 	left:14px;
 	width:16px;
 	height:16px
@@ -35,11 +45,11 @@ ul.page-sidebar li a:hover,
 ul.page-sidebar li a:focus,
 ul.page-sidebar li a:active {
 	color: #fff;
+	background:#363636;
 	text-decoration: none;
 }
 
 ul.page-sidebar li a.active {
-
 	background:#363636;
 	z-index:5;
 	color:#fff

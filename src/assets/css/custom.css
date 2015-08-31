@@ -1,7 +1,66 @@
 /* here you can put your own css to customize and override the theme */
+body {
+  color: #333;
+  line-height: 1;
+  font-family: "Helvetica Neue",Helvetica,Arial,"Hiragino Sans GB","Hiragino Sans GB W3","WenQuanYi Micro Hei",sans-serif;
+}
 a:hover,
 a:visited,
 a:focus,
 a:active {
 	text-decoration: none;
+}
+.header.navbar {
+  height: 60px;
+  min-height: 60px;
+}
+.page-content {
+  min-height: 100vh;
+}
+sup-header {
+  display: block;
+ /* height: 40px;
+  line-height: 40px;*/
+  /*margin: 20px;*/
+  padding:5px 10px;
+  background: rgba(245,245,245,0.88);
+  box-shadow: 0 0 2px #999;
+}
+sup-header .form-group {
+  margin: 0;
+  width: 210px;
+}
+#summary > tbody td {
+  font-size: 30px;
+  color: #333;
+}
+#summary > tbody tr:first-child td {
+  color: #57B5E3;
+}
+.filter-btn-group > label {
+  position: relative;
+  float: left;
+}
+.filter-btn-group > label input[type="radio"] {
+  position: absolute;
+  clip: rect(0, 0, 0, 0);
+  pointer-events: none;
+}
+.filter-btn-group > label input[type="radio"]:checked + span {
+  background-color: #d8d8d8 !important;
+}
+.retained-c1 {
+  background-color: #bfdbf6;
+}
+.retained-c2 {
+  background-color: #a9cef2;
+}
+.retained-c3 {
+  background-color: #92c2ef;
+}
+.retained-c4 {
+  background-color: #7CB5EC;
+}
+.retained-c5 {
+  background-color: #66a8e9;
 }

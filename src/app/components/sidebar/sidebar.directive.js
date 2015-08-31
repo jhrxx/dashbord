@@ -29,15 +29,8 @@
     var directive = {
       restrict: 'E',
       templateUrl: 'app/components/sidebar/sidebar.html'
-      // scope: {
-      //   creationDate: '='
-      // }
-      // controller: NavbarController,
-      // controllerAs: 'vm',
-      // bindToController: true
     };
-
     return directive;
-    
-  }
+  };
+
 })();

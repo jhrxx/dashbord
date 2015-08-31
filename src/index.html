@@ -28,12 +28,16 @@
     <!--[if lt IE 10]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
-    <header>
-
+    <header class="header navbar navbar-fixed-top">
+        <div class="header-inner">
+            <a href="/#" class="navbar-brand">
+                <img src="assets/images/logo-sm.png" alt="logo">
+            </a>
+        </div>
     </header>
     <article class="page-container">
-        <!-- <nav class="page-sidebar-wrapper" ng-include="'app/sidebar/sidebar.html'"></nav> -->
-        <aside-bar class="page-sidebar-wrapper"></aside-bar> 
+        <sup-header></sup-header>
+        <aside-bar class="page-sidebar-wrapper"></aside-bar>
         <section class="page-content-wrapper" ng-view>
         </section>
     </article>

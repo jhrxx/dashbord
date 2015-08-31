@@ -7,12 +7,25 @@
 
   /** @ngInject */
   function TrendsController($scope, $http) {
+    function getDateStr(AddDayCount) {
+      var dd = new Date();
+      dd.setDate(dd.getDate()+AddDayCount);//获取AddDayCount天后的日期
+      var y = dd.getFullYear();
+      var m = dd.getMonth()+1;//获取当前月份的日期
+      var d = dd.getDate();
+      return y+"/"+m+"/"+d;
+    };
+    $scope.today = getDateStr(0);
+    $scope.yesterday = getDateStr(-1);
     var renderChart =  function(data) {
       $('#container').highcharts({
         title: {
+          align: 'left',
           text: '趋势图'
         },
-
+        exporting: {
+          enabled: false
+        },
         xAxis: {
           categories: data.date,
           tickWidth: 0,

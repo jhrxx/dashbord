@@ -2,18 +2,14 @@
     <div class="row">
         <div class="col-xs-12">
             <h3 class="page-title">
-            使用时长 <small>最近一周数据 <span ng-if="0">{{startdate}} ~ {{enddate}}</span></small>
+            使用时长
             <div class="pull-right">
                 <div class="form-inline">
                     <div class="form-group">
-                    <datepicker date-format="{{'yyyy-MM-dd'}}" date-min-limit="2014-1-1" date-max-limit="{{enddate}}">
-                      <input class="form-control" ng-model="startdate" placeholder="开始日期"/>
-                    </datepicker>
-                    </div>
-                    <div class="form-group">
-                    <datepicker date-format="{{'yyyy-MM-dd'}}" date-max-limit="{{yesterday}}" date-min-limit="{{startdate}}">
-                      <input class="form-control" ng-model="enddate" placeholder="结束日期"/>
-                    </datepicker>
+                        <datepicker class="input-group" date-format="{{'yyyy-MM-dd'}}" date-max-limit="{{yesterday}}" date-min-limit="{{minDate}}" button-prev="<i class='ion ion-chevron-left'></i>" button-next="<i class='ion ion-chevron-right'></i>">
+                          <input class="form-control" ng-model="startdate" placeholder="日期"/>
+                          <span class="input-group-addon"><i class="ion ion-calendar"></i></span>
+                        </datepicker>
                     </div>
                     <button type="button" class="btn default refresh" ng-click="refresh();"><i class="ion ion-refresh"></i> 刷新</button>
                 </div>
@@ -22,62 +18,89 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-xs-12">
-            <div class="portlet">
-                <div class="protlet-title">
-                    <div class="btn-group " data-toggle="buttons">
-                        <label class="btn default">
-                        <input type="radio" class="toggle" data-name="">日</label>
-                        <label class="btn default">
-                        <input type="radio" class="toggle" data-name="">周</label>
-                        <label class="btn default">
-                        <input type="radio" class="toggle" data-name="">月</label>
-                    </div>
-                </div>
-            </div>
-            <div id="container" style="min-width:400px;height:500px"></div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-xs-12">
+        <div class="col-md-6">
+            <!-- BEGIN SAMPLE TABLE PORTLET-->
             <div class="portlet">
                 <div class="portlet-title">
                     <div class="caption">
-                        <i class="fa fa-bell-o"></i> 明细
+                        <i class="ion ion-magnet"></i>单次使用时长分布明细
                     </div>
                 </div>
                 <div class="portlet-body">
                     <div class="table-responsive">
-                        <table class="table table-striped table-bordered table-advance table-hover" id="app_details">
+                        <table class="table table-striped table-bordered table-advance table-hover">
                         <thead>
                         <tr>
                             <th>
-                                <i class="fa fa-briefcase"></i> 日期
+                                <i class="ion ion-clock"></i> 时长
+                            </th>
+                            <th class="hidden-xs">
+                                <i class="ion ion-power"></i> 启动次数
                             </th>
                             <th>
-                                <i class="fa fa-user"></i> 新增用户
-                            </th>
-                            <th>
-                                <i class="fa fa-shopping-cart"></i> 活跃用户
-                            </th>
-                            <th>
-                                <i class="fa fa-shopping-cart"></i> 启动次数
-                            </th>
-                            <th>
-                                <i class="fa fa-shopping-cart"></i> 平均持续时间
-                            </th>
-                            <th>
-                                <i class="fa fa-shopping-cart"></i> 累计用户
+                                <i class="ion ion-document-text"></i> 启动次数占比
                             </th>
                         </tr>
                         </thead>
                         <tbody>
-
+                            <tr ng-repeat="item in data.single.data">
+                                <td>{{item.key}}</td>
+                                <td></td>
+                                <td>{{item.value}}%</td>
+                            </tr>
                         </tbody>
                         </table>
                     </div>
                 </div>
             </div>
+            <!-- END SAMPLE TABLE PORTLET-->
+        </div>
+        <div class="col-md-6">
+            <!-- BEGIN SAMPLE TABLE PORTLET-->
+            <div class="portlet">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="ion ion-magnet"></i>日使用时长分布明细
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-advance table-hover">
+                        <thead>
+                        <tr>
+                            <th>
+                                <i class="ion ion-clock"></i> 时长
+                            </th>
+                            <th class="hidden-xs">
+                                <i class="ion ion-person-stalker"></i> 用户数
+                            </th>
+                            <th>
+                                <i class="fa ion-pizza"></i> 用户数比例
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in data.day.data">
+                                <td>{{item.key}}</td>
+                                <td></td>
+                                <td>{{item.value}}%</td>
+                            </tr>
+                        </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- END SAMPLE TABLE PORTLET-->
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="single_duration_container" style="min-width:400px;height:500px"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="day_duration_container" style="min-width:400px;height:500px"></div>
         </div>
     </div>
 </div>

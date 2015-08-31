@@ -37,8 +37,8 @@
         controller: 'UserController',
         controllerAs: 'user'
       })
-      .when('/user/start', {
-        templateUrl: 'app/user/start.html',
+      .when('/user/launch', {
+        templateUrl: 'app/user/launch.html',
         controller: 'UserController',
         controllerAs: 'user'
       })
