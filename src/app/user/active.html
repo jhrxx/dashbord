@@ -2,22 +2,29 @@
     <div class="row">
         <div class="col-xs-12">
             <h3 class="page-title">
-            活跃用户 <small>最近一周数据 <span ng-if="0">{{startdate}} ~ {{enddate}}</span></small>
+            活跃用户 <small ng-show="filter.year">{{filter.year}}年</small> <small ng-show="startdate&&enddate">{{startdate}} ~ {{enddate}}</small>
             <div class="pull-right">
-                <div class="form-inline">
+                <div class="form-inline" ng-show="filter.time === 'daily'">
                     <div class="form-group">
-                        <datepicker class="input-group" date-format="{{'yyyy-MM-dd'}}" date-min-limit="{{minDate}}" date-max-limit="{{enddate}}" button-prev="<i class='ion ion-chevron-left'></i>" button-next="<i class='ion ion-chevron-right'></i>">
-                          <input class="form-control" ng-model="startdate" placeholder="开始日期"/>
-                          <span class="input-group-addon"><i class="ion ion-calendar"></i></span>
+                        <datepicker date-format="{{'yyyy-MM-dd'}}" date-min-limit="{{minDate}}" date-max-limit="{{enddate}}" button-prev="<i class='ion ion-chevron-left'></i>" date-set="{{startdate}}" button-next="<i class='ion ion-chevron-right'></i>">
+                            <input class="form-control" ng-model="startdate" placeholder="开始日期"/>
+                            <i class="ion ion-calendar"></i>
                         </datepicker>
                     </div>
                     <div class="form-group">
-                        <datepicker class="input-group" date-format="{{'yyyy-MM-dd'}}" date-max-limit="{{yesterday}}" date-min-limit="{{startdate}}" button-prev="<i class='ion ion-chevron-left'></i>" button-next="<i class='ion ion-chevron-right'></i>">
+                        <datepicker date-format="{{'yyyy-MM-dd'}}" date-max-limit="{{yesterday}}" date-min-limit="{{startdate}}" button-prev="<i class='ion ion-chevron-left'></i>" date-set="{{enddate}}" button-next="<i class='ion ion-chevron-right'></i>">
                           <input class="form-control" ng-model="enddate" placeholder="结束日期"/>
-                          <span class="input-group-addon"><i class="ion ion-calendar"></i></span>
+                          <i class="ion ion-calendar"></i>
                         </datepicker>
                     </div>
                     <button type="button" class="btn default refresh" ng-click="refresh();"><i class="ion ion-refresh"></i> 刷新</button>
+                </div>
+                <div class="form-inline" ng-show="filter.time !== 'daily'">
+                    <div class="form-group">
+                        <select class="form-control" ng-model="filter.year"
+                        ng-options="option for option in yearPicker track by option"
+                        ng-change="yearPickerChange(filter.year)" name="year"></select>
+                    </div>
                 </div>
             </div>
             </h3>
@@ -29,18 +36,18 @@
                 <div class="protlet-title">
                     <div class="btn-group filter-btn-group">
                         <label>
-                        <input ng-model="filter.time" value="day" name="filter" type="radio" class="toggle"><span class="btn default">日</span></label>
+                        <input ng-model="filter.time" value="daily" ng-change="filterOnChange(filter.time)" name="filter" type="radio" class="toggle"><span class="btn default">日</span></label>
                         <label>
-                        <input ng-model="filter.time" value="week" name="filter" type="radio" class="toggle"><span class="btn default">周</span></label>
+                        <input ng-model="filter.time" value="weekly" ng-change="filterOnChange(filter.time)" name="filter" type="radio" class="toggle"><span class="btn default">周</span></label>
                         <label>
-                        <input ng-model="filter.time" value="month" name="filter" type="radio" class="toggle"><span class="btn default">月</span></label>
+                        <input ng-model="filter.time" value="monthly" ng-change="filterOnChange(filter.time)" name="filter" type="radio" class="toggle"><span class="btn default">月</span></label>
                     </div>
                 </div>
             </div>
             <div id="container" style="min-width:400px;height:500px"></div>
         </div>
     </div>
-    <div class="row">
+    <div class="row hide">
         <div class="col-xs-12">
             <div class="portlet">
                 <div class="portlet-title">
@@ -104,16 +111,14 @@
                             <th>
                                 <i class="ion-person"></i> 活跃用户
                             </th>
-                            <th>
-                                <i class="ion-stats-bars"></i> 活跃用户占比(某日/周/月的活跃用户占所选时间段总活跃用户的比例)
-                            </th>
                         </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                            <tr ng-repeat="item in data.data">
+                                <td ng-show="{{filter.time=='daily'}}">{{item.date}}</td>
+                                <td ng-show="{{filter.time=='weekly'}}">第{{item.week_no}}周 ({{item.start_date}} ~ {{item.end_date}})</td>
+                                <td ng-show="{{filter.time=='monthly'}}">{{item.year}}年{{item.month_no}}月</td>
+                                <td>{{item.active_user}}</td>
                             </tr>
                         </tbody>
                         </table>

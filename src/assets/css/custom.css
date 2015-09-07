@@ -2,7 +2,7 @@
 body {
   color: #333;
   line-height: 1;
-  font-family: "Helvetica Neue",Helvetica,Arial,"Hiragino Sans GB","Hiragino Sans GB W3","WenQuanYi Micro Hei",sans-serif;
+  font-family: "Helvetica Neue",Helvetica,Arial,"Hiragino Sans GB","Hiragino Sans GB W3","Microsoft Yahei","WenQuanYi Micro Hei",sans-serif;
 }
 a:hover,
 a:visited,
@@ -11,18 +11,23 @@ a:active {
 	text-decoration: none;
 }
 .header.navbar {
-  height: 60px;
+  height: 104px;
   min-height: 60px;
 }
 .page-content {
+  padding-top: 60px;
   min-height: 100vh;
 }
 sup-header {
+  position: fixed;
   display: block;
- /* height: 40px;
-  line-height: 40px;*/
+  top: 60px;
+  left: 0;
+  right: 0;
+  height: 44px;
+  /*line-height: 40px;*/
   /*margin: 20px;*/
-  padding:5px 10px;
+  padding: 5px 10px;
   background: rgba(245,245,245,0.88);
   box-shadow: 0 0 2px #999;
 }
@@ -36,6 +41,36 @@ sup-header .form-group {
 }
 #summary > tbody tr:first-child td {
   color: #57B5E3;
+}
+aside-bar {
+  position: relative;
+}
+.page-sidebar {
+  position: fixed;
+  top: 104px;
+  left: 0;
+  right: 0;
+}
+datepicker {
+  min-width: 170px;
+}
+datepicker > input {
+  padding-left: 12px !important;
+  padding-right: 33px !important;
+}
+datepicker > .ion {
+  font-size: 20px;
+  position: absolute;
+  z-index: 1;
+  top: 7px;
+  right: 10px;
+  color: #999;
+}
+.selector-group {
+  cursor: pointer;
+}
+.selector-group i{
+  font-size: 20px;
 }
 .filter-btn-group > label {
   position: relative;

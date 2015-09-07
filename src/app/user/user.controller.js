@@ -26,32 +26,6 @@
         credits: {
           enabled: false
         },
-        // yAxis: [{ // left y axis
-        //   title: {
-        //     text: null
-        //   },
-        //   labels: {
-        //     align: 'left',
-        //     x: 3,
-        //     y: 16,
-        //     format: '{value:.,0f}'
-        //   },
-        //   showFirstLabel: false
-        // }, { // right y axis
-        //   linkedTo: 0,
-        //   gridLineWidth: 0,
-        //   opposite: true,
-        //   title: {
-        //     text: null
-        //   },
-        //   labels: {
-        //     align: 'right',
-        //     x: -3,
-        //     y: 16,
-        //     format: '{value:.,0f}'
-        //   },
-        //   showFirstLabel: false
-        // }],
         legend: {
           enabled: true,
           align: 'right',
@@ -63,6 +37,14 @@
         tooltip: {
           shared: false,
           crosshairs: false
+        },
+        yAxis: {
+          title: {
+            text: ''
+          },
+          maxPadding: 2,
+          minPadding: 2,
+          min:0
         },
         plotOptions: {
           series: {
@@ -76,12 +58,13 @@
         }
       };
     var data = {
-      'new': {
-        url: 'http://115.29.202.161:8087/statistics/api/new',
-        chartCfg: angular.extend(chartCfg, {
-          // chart: {
-          //   type: 'column'
-          // },
+      'active': {
+        filter: true,
+        url: '/statistics/api/common',
+        chartCfg: angular.extend({
+          chart: {
+            type: 'line'
+          },
           title: {
             text: '新增用户趋势',
             legend: {
@@ -89,29 +72,146 @@
             }
           },
           tooltip: {
-            pointFormat: '{series.name}: {point.y:.1f}',
+            pointFormat: '{series.name}: {point.y:.0f}',
             shared: true
           }
-        }),
+        },chartCfg),
         dataGenerator: function(data) {
-
+          var _obj = {
+            new_user:[],
+            active_user:[],
+            start_date:[],
+            end_date:[],
+            launch: [],
+            date:[],
+            week_no:[],
+            year:[]
+          };
+          _obj.data = data;
+          angular.forEach(data, function(value, key){
+            _obj.new_user.push(value.new_user);
+            _obj.active_user.push(value.active_user);
+            _obj.launch.push(value.launch);
+            if(!value.year) {
+              _obj.date.push(value.date);
+            }
+            if(value.week_no) {
+              _obj.date.push('第'+ value.week_no +'周');
+            }
+            if(value.month_no) {
+              _obj.date.push(value.year + '年'+ value.month_no +'月');
+            }
+            _obj.week_no.push(value.week_no);
+            _obj.start_date.push(value.start_date);
+            _obj.end_date.push(value.end_date);
+            _obj.year.push(value.year);
+          });
+          return _obj;
         },
-        render: function() {
+        render: function(data) {
+          // $log.log(this.chartCfg)
+          var _cfg = angular.extend(this.chartCfg, {
+            chart: {
+              type: 'line'
+            },
+            title: {
+              text: '活跃用户趋势',
+              legend: {
+                floating: false
+              }
+            },
+            tooltip: {
+              pointFormat: '{series.name}: {point.y:.0f}',
+              shared: true
+            },
+            xAxis: {
+              categories: data.date
+            },
+            legend: {
+              enabled: false
+            },
+            series: [{
+              name: '活跃用户',
+              data: data.active_user
+            }]
+          });
 
+          $('#container').highcharts(_cfg);
         }
       },
-      'active': {
-        url: 'http://115.29.202.161:8087/statistics/api/active'
-      },
-      'silent': {
-        url: 'http://115.29.202.161:8087/statistics/api/silent'
+      'new': {
+        url: '/statistics/api/commondaily',
+        chartCfg: angular.extend({
+          chart: {
+            type: 'line'
+          },
+          title: {
+            text: '新增用户趋势',
+            legend: {
+              floating: false
+            }
+          },
+          legend: {
+            enabled: false
+          },
+          yAxis:{
+            maxPadding: 5,
+            minPadding: 5
+          },
+          tooltip: {
+            pointFormat: '{series.name}: {point.y:.0f}',
+            shared: true
+          }
+        }, chartCfg),
+        dataGenerator: function(data) {
+          // $log.log(data)
+          var _obj = {
+            new_user:[],
+            active_user:[],
+            date:[],
+            launch: [],
+            single_duration:[]
+          };
+          _obj.data = data;
+          angular.forEach(data, function(value, key){
+            _obj.new_user.push(value.new_user);
+            _obj.active_user.push(value.active_user);
+            _obj.date.push(value.date);
+            _obj.launch.push(value.launch);
+            _obj.single_duration.push(value.single_duration);
+          });
+          return _obj;
+        },
+        render: function(data) {
+          var _cfg = angular.extend(this.chartCfg, {
+            chart: {
+              type: 'line'
+            },
+            title: {
+              text: '新增用户趋势',
+              legend: {
+                floating: false
+              }
+            },
+            tooltip: {
+              pointFormat: '{series.name}: {point.y:.0f}',
+              shared: true
+            },
+            xAxis: {
+              categories: data.date
+            },
+            series: [{
+              name: '新增用户',
+              data: data.new_user
+            }]
+          });
+
+          $('#container').highcharts(_cfg);
+        }
       },
       'launch': {
-        url: 'http://115.29.202.161:8087/statistics/api/launch',
-        chartCfg: angular.extend(chartCfg, {
-          // chart: {
-          //   type: 'column'
-          // },
+        url: '/statistics/api/commondaily',
+        chartCfg: angular.extend({
           title: {
             text: '启动次数趋势',
             legend: {
@@ -119,40 +219,63 @@
             }
           },
           tooltip: {
-            pointFormat: '{series.name}: {point.y:.1f}',
+            pointFormat: '{series.name}: {point.y:.0f}',
             shared: true
           }
-        }),
+        }, chartCfg),
         dataGenerator: function(data) {
-
+          var _obj = {
+            date:[],
+            launch: []
+          };
+          _obj.data = data;
+          angular.forEach(data, function(value, key){
+            _obj.date.push(value.date);
+            _obj.launch.push(value.launch);
+          });
+          return _obj;
         },
-        render: function() {
+        render: function(data) {
+          var _cfg = angular.extend(this.chartCfg, {
+            chart: {
+              type: 'line'
+            },
+            title: {
+              text: '启动次数趋势',
+              legend: {
+                floating: false
+              }
+            },
+            tooltip: {
+              pointFormat: '{series.name}: {point.y:.0f}',
+              shared: true
+            },
+            xAxis: {
+              categories: data.date
+            },
+            series: [{
+              name: '启动次数',
+              data: data.launch
+            }]
+          });
 
+          $('#container').highcharts(_cfg);
         }
       },
       'retained': {
-        url: 'http://115.29.202.161:8087/statistics/api/retained'
+        filter: true,
+        url: '/statistics/api/remain',
+        render: function(data) {
+
+        }
       },
       'duration': {
-        url: 'http://115.29.202.161:8087/statistics/api/duration',
-        chartCfg: angular.extend(chartCfg, {
-          chart: {
-            type: 'column'
-          },
-          title: {
-            legend: {
-              floating: false
-            }
-          },
-          tooltip: {
-            pointFormat: '{series.name}: {point.y:.1f} %',
-            shared: true
-          }
-        }),
+        url: '/statistics/api/duration',
+        chartCfg: chartCfg,
         dataGenerator: function(data) {
           var obj = {single: {key: [], value: [], data:[]}, day: {key: [], value: [], data:[]}};
-          // obj.single_duration = data.single_duration;
-          // obj.day_duration = data.day_duration;
+          obj.avg_single_duration = data.avg_single_duration;
+          obj.avg_day_duration = data.avg_day_duration;
           angular.forEach(data.single_duration, function(value, key) {
             obj.single.key.push(key);
             obj.single.value.push(value);
@@ -168,9 +291,11 @@
           return obj;
         },
         render: function(data) {
-          // $log.log(this.chartCfg);
           var _cfg = this.chartCfg,
               _singleCfg = angular.extend(_cfg, {
+                chart: {
+                  type: 'column'
+                },
                 title: {
                   text: '单次使用时长分布'
                 },
@@ -180,12 +305,25 @@
                 series: [{
                   name: '时长占比',
                   data: data.single.value
-                }]
+                }],
+                yAxis:{
+                  title: {
+                    text: ''
+                  },
+                  min:0
+                },
+                tooltip: {
+                  pointFormat: '{series.name}: {point.y:.1f}%',
+                  shared: true
+                }
               });
 
           $('#single_duration_container').highcharts(_singleCfg);
 
           var _dayCfg = angular.extend(_cfg, {
+            chart: {
+              type: 'column'
+            },
             title: {
               text: '日使用时长分布'
             },
@@ -195,7 +333,18 @@
             series: [{
               name: '时长占比',
               data: data.day.value
-            }]
+            }],
+            yAxis:{
+              title: {
+                text: ''
+              },
+              min:0
+            },
+            tooltip: {
+              shared: false,
+              crosshairs: false,
+              pointFormat: '{series.name}: {point.y:.1f}%'
+            }
           });
 
           $('#day_duration_container').highcharts(_dayCfg);
@@ -211,10 +360,11 @@
   };
 
   /** @ngInject */
-  function UserController($rootScope, $scope, $http, $location, $log, userConfig) {
+  function UserController($rootScope, $scope, $http, $location, $log, $filter, userConfig, toastr, cfpLoadingBar, config) {
+
     // $log.log($location.path());
     var path = $location.path().split('/')[2],
-        config = userConfig.getConfig(),
+        ucfg = userConfig.getConfig(),
         options = {};
 
     function getDateStr(AddDayCount,split) {
@@ -229,55 +379,98 @@
       return y+split+m+split+d;
     };
     $scope.filter = {
-      time:'day'
+      time:'daily'
     };
     $scope.today = getDateStr(0);
     $scope.yesterday = getDateStr(-1);
-    $scope.minDate = '2014/1/1';
-
+    $scope.minDate = '2013/10/1';
+    $scope.yearPicker = [2013, 2014, 2015];
 
 
     switch (path) {
       case 'new': break;
       case 'active': break;
-      case 'silent': break;
       case 'launch':
+
         break;
       case 'retained': break;
       case 'duration':
-        options.start_date = getDateStr(-1,'-');
-        $scope.startdate = options.start_date;
+        $scope.enddate = null;
+        $scope.startdate = null;
         break;
     };
 
-    var retainedBgc = function(data) {
-      return 'retained-c'+Math.ceil(data/20);
-    }
+    $scope.retention = function(data) {
+      return isNaN(data)?'':$filter('number')(data*100, 2)+'%';
+    };
+    $scope.retainedBgc = function(data) {
+      return 'retained-c'+Math.ceil(data*100/20);
+    };
+
+    var setCalendar = function(data) {
+      if(path==='active' || path==='retained'){
+        if(data[0].year) {
+          $scope.filter.year = data[0].year;
+        } else {
+          $scope.startdate = data[0].date;
+          $scope.enddate = data[data.length-1].date;
+        }
+      } else if(path==='duration'){
+        $scope.enddate = null;
+        $scope.startdate = data.date;
+      } else {
+        $scope.startdate = data[0].date;
+        $scope.enddate = data[data.length-1].date;
+      }
+    };
 
     var fetchData = function(options) {
+      if($rootScope.currentApp.id === 0){
+        return;
+      }
+      cfpLoadingBar.start();
+
       options = angular.extend({
-        app_id: $rootScope.currentApp.id,
-        start_date: $scope.startdate,
-        end_date: $scope.enddate
+        app_id: $rootScope.currentApp.id
       }, options);
 
-      $http.get(config[path].url, options).
+      if($scope.filter.year) {
+        options = angular.extend({
+          year: $scope.filter.year
+        }, options);
+      } else if(path === 'duration' && $scope.startdate) {
+        options = angular.extend({
+          start_date: $scope.startdate
+        }, options);
+      } else if($scope.startdate && $scope.enddate) {
+        options = angular.extend({
+          start_date: $scope.startdate,
+          end_date: $scope.enddate
+        }, options);
+      }
+
+      var url = ucfg[path].url;
+      if(ucfg[path].filter) {
+        url += $scope.filter.time;
+      }
+
+      $http.get(config.getUrl()+url, {params: options}).
         then(function(response) {
           // this callback will be called asynchronously
           // when the response is available
-
-  var mockdata =  {"errno":0,"errmsg":"","data":{"id":962,"create_time":1440854423,"update_time":1440854423,"app_id":5,"date":"2015-07-20","single_duration":{"1-3\u79d2":0.7,"4-10\u79d2":1.6,"11-30\u79d2":0.2,"31-60\u79d2":0.4,"1-3\u5206":40.6,"3-10\u5206":55.6,"10-20\u5206":0.9},"day_duration":{"1-3\u79d2":0.9,"4-10\u79d2":0.9,"11-30\u79d2":0.6,"31-60\u79d2":1.9,"1-3\u5206":36.8,"3-10\u5206":58.4,"10-20\u5206":0.5}}}
-  $log.log(mockdata);
-  $scope.data = config[path].dataGenerator ?  config[path].dataGenerator(mockdata.data): response.data;
-  $log.log($scope.data);
-  config[path].render && config[path].render($scope.data);
-  return;
           if(response.data.errno === 0) {
-            $scope.data = config[path].dataGenerator ? config[path].dataGenerator(response.data) : response.data;
-            config[path].render && config[path].render($scope.data);
+            if(response.data.data.length === 0){
+              toastr.error('没有数据');
+            } else {
+              // $log.log(response.data.data);
+              $scope.data = ucfg[path].dataGenerator ? ucfg[path].dataGenerator(response.data.data) : response.data.data;
+              ucfg[path].render && ucfg[path].render($scope.data);
+              setCalendar(response.data.data);
+            }
           } else {
-            alert(response.data.errmsg);
+            toastr.error(response.data.errmsg);
           }
+          cfpLoadingBar.complete()
         }, function(response) {
           // called asynchronously if an error occurs
           // or server returns response with an error status.
@@ -287,10 +480,30 @@
 
     $scope.$watch(function() {
       return $rootScope.currentApp;
-    }, function() {
+    }, function(newValue, oldValue) {
       $scope.currentApp = $rootScope.currentApp;
-      fetchData({app_id: $scope.currentApp.id});
+      $scope.startdate = null;
+      $scope.enddate = null;
+
+      if(newValue && newValue.id === 0) {
+        fetchData({app_id: $scope.currentApp.id});
+      } else {
+        fetchData();
+      }
     }, true);
+
+    $scope.filterOnChange = function(value){
+      $log.debug(value);
+      $scope.startdate = null;
+      $scope.enddate = null;
+      $scope.filter.year = null;
+      fetchData({app_id: $scope.currentApp.id});
+    };
+
+    $scope.yearPickerChange = function(value){
+      $log.debug(value);
+      fetchData({year: value});
+    };
 
     $scope.refresh = function() {
       fetchData();

@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-xs-12">
             <h3 class="page-title">
-            应用趋势 <small ng-hide="startdate&&enddate">最近一周数据</small> <small ng-show="startdate&&enddate">{{startdate}} ~ {{enddate}}</small>
+            整体趋势 <small ng-hide="startdate&&enddate">最近一周数据</small> <small ng-show="startdate&&enddate">{{startdate}} ~ {{enddate}}</small>
             <div class="pull-right">
                 <div class="form-inline">
                     <div class="form-group">
@@ -24,6 +24,53 @@
         </div>
     </div>
     <div class="row">
+        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+            <div class="dashboard-stat blue">
+                <div class="visual">
+                    <i class="ion-person"></i>
+                </div>
+                <div class="details">
+                    <div class="number">
+                        {{data.summary.total}}
+                    </div>
+                    <div class="desc">
+                        累计用户
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+            <div class="dashboard-stat purple">
+                <div class="visual">
+                    <i class="ion-ios-people"></i>
+                </div>
+                <div class="details">
+                    <div class="number">
+                        {{data.summary.active_user_yesterday}}
+                    </div>
+                    <div class="desc">
+                         昨日活跃用户
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+            <div class="dashboard-stat yellow">
+                <div class="visual">
+                    <i class="ion-mouse"></i>
+                </div>
+                <div class="details">
+                    <div class="number">
+                         {{data.summary.dayDuration7}}
+                    </div>
+                    <div class="desc">
+                         过去7天平均日使用时长
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-xs-12">
         <div class="portlet">
         <div class="protlet-title">
@@ -41,51 +88,6 @@
             </div>
         </div>
             <div id="container" style="min-width:400px;height:500px"></div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="portlet">
-                <div class="portlet-title">
-                    <div class="caption">
-                        <i class="fa fa-bell-o"></i> 明细
-                    </div>
-                </div>
-                <div class="portlet-body">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-bordered table-advance table-hover" id="app_details">
-                        <thead>
-                        <tr>
-                            <th>
-                                <i class="fa fa-briefcase"></i> 日期
-                            </th>
-                            <th>
-                                <i class="fa fa-user"></i> 新增用户
-                            </th>
-                            <th>
-                                <i class="fa fa-shopping-cart"></i> 活跃用户
-                            </th>
-                            <th>
-                                <i class="fa fa-shopping-cart"></i> 启动次数
-                            </th>
-                            <th>
-                                <i class="fa fa-shopping-cart"></i> 累计用户
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-repeat="item in data">
-                                <td>{{item.date}}</td>
-                                <td>{{item.sum_new_user}}</td>
-                                <td>{{item.sum_active_user}}</td>
-                                <td>{{item.sum_launch}}</td>
-                                <td>{{item.sum_total}}</td>
-                            </tr>
-                        </tbody>
-                        </table>
-                    </div>
-                </div>
             </div>
         </div>
     </div>

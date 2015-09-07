@@ -7,9 +7,10 @@
     .constant('malarkey', malarkey)
     .constant('toastr', toastr)
     .constant('ionicons')
-    .constant('loading')
+    // .constant('loading')
     .constant('highcharts-release')
     .constant('720kb.datepicker')
+    // .constant('angular-loading-bar')
     .constant('moment', moment);
 
 })();

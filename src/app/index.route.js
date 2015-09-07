@@ -17,6 +17,11 @@
         controller: 'TrendsController',
         controllerAs: 'trends'
       })
+      .when('/trends/summary', {
+        templateUrl: 'app/trends/summary.html',
+        controller: 'TrendsController',
+        controllerAs: 'trends'
+      })
       .when('/user/new', {
         templateUrl: 'app/user/new.html',
         controller: 'UserController',

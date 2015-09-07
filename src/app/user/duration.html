@@ -2,19 +2,51 @@
     <div class="row">
         <div class="col-xs-12">
             <h3 class="page-title">
-            使用时长
+            使用时长 <small>{{startdate}}</small>
             <div class="pull-right">
                 <div class="form-inline">
                     <div class="form-group">
-                        <datepicker class="input-group" date-format="{{'yyyy-MM-dd'}}" date-max-limit="{{yesterday}}" date-min-limit="{{minDate}}" button-prev="<i class='ion ion-chevron-left'></i>" button-next="<i class='ion ion-chevron-right'></i>">
-                          <input class="form-control" ng-model="startdate" placeholder="日期"/>
-                          <span class="input-group-addon"><i class="ion ion-calendar"></i></span>
+                        <datepicker date-format="{{'yyyy-MM-dd'}}" date-min-limit="{{minDate}}" date-max-limit="{{enddate}}" button-prev="<i class='ion ion-chevron-left'></i>" date-set="{{startdate}}" button-next="<i class='ion ion-chevron-right'></i>">
+                            <input class="form-control" ng-model="startdate" placeholder="开始日期"/>
+                            <i class="ion ion-calendar"></i>
                         </datepicker>
                     </div>
                     <button type="button" class="btn default refresh" ng-click="refresh();"><i class="ion ion-refresh"></i> 刷新</button>
                 </div>
             </div>
             </h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-offset-1 col-md-4 col-sm-6 col-xs-12">
+            <div class="dashboard-stat blue">
+                <div class="visual">
+                    <i class="ion-checkmark-circled"></i>
+                </div>
+                <div class="details">
+                    <div class="number">
+                        {{data.avg_single_duration}}
+                    </div>
+                    <div class="desc">
+                        平均单次使用时长
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-offset-2 col-md-4 col-sm-6 col-xs-12">
+            <div class="dashboard-stat green">
+                <div class="visual">
+                    <i class="ion-android-sunny"></i>
+                </div>
+                <div class="details">
+                    <div class="number">
+                         {{data.avg_day_duration}}
+                    </div>
+                    <div class="desc">
+                         平均日使用时长
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="row">
@@ -34,9 +66,6 @@
                             <th>
                                 <i class="ion ion-clock"></i> 时长
                             </th>
-                            <th class="hidden-xs">
-                                <i class="ion ion-power"></i> 启动次数
-                            </th>
                             <th>
                                 <i class="ion ion-document-text"></i> 启动次数占比
                             </th>
@@ -45,7 +74,6 @@
                         <tbody>
                             <tr ng-repeat="item in data.single.data">
                                 <td>{{item.key}}</td>
-                                <td></td>
                                 <td>{{item.value}}%</td>
                             </tr>
                         </tbody>
@@ -71,9 +99,6 @@
                             <th>
                                 <i class="ion ion-clock"></i> 时长
                             </th>
-                            <th class="hidden-xs">
-                                <i class="ion ion-person-stalker"></i> 用户数
-                            </th>
                             <th>
                                 <i class="fa ion-pizza"></i> 用户数比例
                             </th>
@@ -82,7 +107,6 @@
                         <tbody>
                             <tr ng-repeat="item in data.day.data">
                                 <td>{{item.key}}</td>
-                                <td></td>
                                 <td>{{item.value}}%</td>
                             </tr>
                         </tbody>

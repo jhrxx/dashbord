@@ -18,22 +18,37 @@
 
   /** @ngInject */
   function SupheaderController($rootScope, $scope, $log, $cookieStore, $location) {
-    $scope.data = {
-      availableOptions: JSON.parse($cookieStore.get('apps')),
-      selectedOption: $cookieStore.get('currentApp') //This sets the default value of the select in the ui
+    var init = function() {
+      var _apps = $cookieStore.get('apps');
+      if(_apps) {
+        $scope.data = {
+          availableOptions: JSON.parse(_apps),
+          selectedOption: $cookieStore.get('currentApp') //This sets the default value of the select in the ui
+        };
+
+        $rootScope.currentApp = $cookieStore.get('currentApp');
+      }
     };
 
-    $rootScope.currentApp = $cookieStore.get('currentApp');
-    // $log.log($scope.data);
-
-    $scope.changeApp = function() {
+    $scope.changeApp = function(newValue, oldValue) {
+      // $log.debug(newValue,oldValue)
       $rootScope.currentApp = $scope.data.selectedOption;
       $cookieStore.put('currentApp', $scope.data.selectedOption);
 
-      if($scope.data.selectedOption.id === 0) {
+      if(newValue.id === 0) {
         $location.path('/');
       }
+
+      if(newValue.id > 1 && +oldValue < 2) {
+        $location.path('trends/summary');
+      }
     };
+
+    $scope.$watch(function() {
+      return $rootScope.currentApp;
+    }, function() {
+      init();
+    }, true);
 
   };
 })();

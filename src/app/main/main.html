@@ -45,10 +45,10 @@
                         <div class="portlet-body">
                             <div class="table-responsive">
                                 <loading ng-if="0"></loading>
-                                <table class="table table-hover" id="summary">
+                                <table class="table" id="summary">
                                 <thead>
                                 <tr>
-                                    <th> #</th>
+                                    <th>今天{{today}}</th>
                                     <th>新增用户</th>
                                     <th>活跃用户</th>
                                     <th>启动次数</th>
@@ -56,13 +56,13 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
+                                    <!-- <tr>
                                         <td>今日</td>
                                         <td>{{today.new_user}}</td>
                                         <td>{{today.active_user}}</td>
                                         <td>{{today.launch}}</td>
                                         <td>{{today.total}}</td>
-                                    </tr>
+                                    </tr> -->
                                     <tr>
                                         <td>昨日</td>
                                         <td>{{yesterday.new_user}}</td>
@@ -122,9 +122,9 @@
                                 <tbody>
                                     <tr ng-repeat="app in appInfo">
                                         <td>{{app.platform}}</td>
-                                        <td>{{app.name}}</td>
+                                        <td><a style="color: #4B8DF8;cursor:pointer;" ng-click="showDetail(app)">{{app.name}}</a></td>
                                         <td>{{app.sum_data.today.new_user}}</td>
-                                        <td>{{app.sum_data.yestday.new_user}}</td>
+                                        <td>{{app.sum_data.yesterday.new_user}}</td>
                                         <td>{{app.sum_data.today.active_user}}</td>
                                         <td>{{app.sum_data.yesterday.active_user}}</td>
                                         <td>{{app.sum_data.today.launch}}</td>

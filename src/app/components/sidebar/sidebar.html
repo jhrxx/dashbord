@@ -1,12 +1,15 @@
 <ul class="page-sidebar">
-    <li class="active"><a active-link="active" href="#/"><i class="ion ion-home"></i>应用列表</a></li>
-    <li><a active-link="active" href="#/trends"><i class="ion ion-monitor"></i>应用趋势</a></li>
+    <ul ng-show="currentApp.id==0">
+        <li class="active"><a active-link="active" href="#/"><i class="ion-home"></i>应用列表</a></li>
+        <li><a active-link="active" href="#/trends"><i class="ion-monitor"></i>应用趋势</a></li>
+    </ul>
     <ul ng-hide="currentApp.id==0">
-        <li><a active-link="active" href="#/user/new"><i class="ion ion-person-add"></i>新增用户</a></li>
-        <li><a active-link="active" href="#/user/active"><i class="ion ion-person"></i>活跃用户</a></li>
-        <li><a active-link="active" href="#/user/duration"><i class="ion ion-ios-timer-outline"></i>使用时长</a></li>
-        <li><a active-link="active" href="#/user/silent"><i class="ion ion-sad"></i>沉默用户</a></li>
-        <li><a active-link="active" href="#/user/launch"><i class="ion ion-power"></i>启动次数</a></li>
-        <li><a active-link="active" href="#/user/retained"><i class="ion ion-person-stalker"></i>留存用户</a></li>
+        <li><a active-link="active" href="#/trends/summary"><i class="ion-arrow-graph-up-right"></i>整体趋势</a></li>
+        <li><a active-link="active" href="#/user/new"><i class="ion-person-add"></i>新增用户</a></li>
+        <li><a active-link="active" href="#/user/active"><i class="ion-person"></i>活跃用户</a></li>
+        <li><a active-link="active" href="#/user/duration"><i class="ion-clock"></i>使用时长</a></li>
+        <li ng-if="0"><a active-link="active" href="#/user/silent"><i class="ion-sad"></i>沉默用户</a></li>
+        <li><a active-link="active" href="#/user/launch"><i class="ion-power"></i>启动次数</a></li>
+        <li><a active-link="active" href="#/user/retained"><i class="ion-person-stalker"></i>留存用户</a></li>
     </ul>
 </ul>
